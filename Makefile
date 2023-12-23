@@ -10,49 +10,48 @@
 #                                                                              #
 # **************************************************************************** #
 
-TARGET = libft.a
-
-files = ft_strlen ft_atoi ft_substr ft_strjoin \
-ft_strtrim ft_split ft_bzero ft_isalnum \
-ft_isalpha ft_isascii ft_isdigit ft_isprint \
-ft_memcpy ft_memmove ft_memset ft_putnbr_fd \
-ft_strlcpy ft_striteri ft_memchr ft_strrchr \
-ft_strchr ft_tolower ft_toupper ft_strncmp \
-ft_strlcat ft_strmapi ft_memcmp ft_calloc \
-ft_putchar_fd ft_putstr_fd ft_putendl_fd ft_lstadd_front \
-ft_lstsize ft_lstlast ft_lstadd_back ft_lstdelone \
-ft_lstclear ft_lstiter ft_lstmap ft_lstnew ft_strnstr \
-ft_strdup ft_itoa 
+NAME = libft.a
 
 CC = gcc
+
 CFLAGS = -Wall -Wextra -Werror
 
-OUTPUT = $(TARGET)
+AR = ar
 
-CFILES = $(files:%=%.c)
+SRC = ft_atoi.c ft_memchr.c ft_split.c ft_strncmp.c ft_bzero.c \
+		ft_memcmp.c ft_strchr.c ft_strnstr.c ft_calloc.c ft_memcpy.c \
+	ft_strdup.c ft_strrchr.c ft_isalnum.c ft_memmove.c ft_striteri.c \
+	ft_strtrim.c ft_isalpha.c ft_memset.c ft_strjoin.c ft_substr.c \
+	ft_isascii.c ft_putchar_fd.c ft_strlcat.c ft_tolower.c ft_isdigit.c \
+	ft_putendl_fd.c ft_strlcpy.c ft_toupper.c ft_isprint.c ft_putnbr_fd.c \
+	ft_strlen.c ft_itoa.c ft_putstr_fd.c ft_strmapi.c
 
-OFILES = $(files:%=%.o)
+SRCBONUS = ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c ft_lstdelone.c \
+		ft_lstiter.c ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c
 
-NAME = $(OUTPUT)
+OBJ = $(SRC:.c=.o)
 
-$(NAME):
-	$(CC) $(CFLAGS) -c $(CFILES) -I./
-	ar -rc $(OUTPUT) $(OFILES)
+OBJBONUS = $(SRCBONUS:.c=.o)
+
+$(NAME): $(OBJ)
+	$(AR) rc $(NAME) $(OBJ)
+	ranlib $(NAME)
 
 all: $(NAME)
 
+bonus: $(OBJ) $(OBJBONUS)
+	$(AR) rc $(NAME) $(OBJ) $(OBJBONUS)
+	ranlib $(NAME)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
 clean:
-	rm -f $(OFILES)
+	rm -f $(OBJ) $(OBJBONUS)
 
 fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
 
-debug: CFLAGS += -g3
-debug: all bonus
-
-sanitize: CFLAGS += -fsanitize=address -g3
-sanitize: all bonus
-
-.PHONY: all, clean, fclean, re, bonus
+.PHONY: all clean fclean re bonus
